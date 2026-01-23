@@ -38,7 +38,7 @@ class CodeExecutor:
 
             return AgentResponse(
                 data=data,
-                message="Timeline code executed successfully",
+                message=f"Timeline code executed successfully{': ' + description if description else ''}",
                 status=AgentStatus.SUCCESS,
             )
 
@@ -103,7 +103,6 @@ class CodeExecutor:
         max_retries: int = 3,
     ) -> str:
         import time
-        import re
 
         for attempt in range(max_retries):
             try:
@@ -142,7 +141,7 @@ class CodeExecutor:
                         f"video-only fallback: {e}"
                     )
                     try:
-                        video_only_code = self._generate_video_only_fallback(code, re)
+                        video_only_code = self._generate_video_only_fallback(code)
                         exec(video_only_code, exec_globals, exec_locals)
                         fallback_url = exec_locals.get("stream_url")
                         if fallback_url:
@@ -172,7 +171,9 @@ class CodeExecutor:
 
         raise Exception("Unexpected error in retry logic")
 
-    def _generate_video_only_fallback(self, original_code: str, re_module) -> str:
+    def _generate_video_only_fallback(self, original_code: str) -> str:
+        import re
+
         pattern = r"VideoAsset\(([^)]*)\)"
 
         def add_volume_zero(match):
@@ -180,9 +181,10 @@ class CodeExecutor:
             if "volume=" not in params:
                 if params.strip():
                     return f"VideoAsset({params}, volume=0)"
-                return "VideoAsset(volume=0)"
+                else:
+                    return "VideoAsset(volume=0)"
             return match.group(0)
 
-        modified_code = re_module.sub(pattern, add_volume_zero, original_code)
+        modified_code = re.sub(pattern, add_volume_zero, original_code)
         logger.info("Generated video-only fallback code.")
         return modified_code

@@ -326,10 +326,12 @@ class Session:
         self.video_id = video_id
         self.collection_id = collection_id
         self.reasoning_context = []
+        self.agent_context = {}
         self.state = {}
         self.output_message = OutputMessage(
             db=self.db, session_id=self.session_id, conv_id=self.conv_id
         )
+        self.edited_context = kwargs.get("edited_context", None)
 
         self.get_context_messages()
 
@@ -338,12 +340,22 @@ class Session:
         context = {
             "reasoning": [message.to_llm_msg() for message in self.reasoning_context],
         }
+        if self.agent_context:
+            for agent_name, agent_context in self.agent_context.items():
+                context[agent_name] = [message.to_llm_msg() for message in agent_context]
         self.db.add_or_update_context_msg(self.session_id, context)
 
-    def get_context_messages(self):
-        """Get the reasoning context messages from the database."""
+    def get_context_messages(self, agent_name: str = None):
+        """Get the reasoning context messages from the database or use edited context if provided."""
+        if agent_name:
+            context = self.edited_context or self.db.get_context_messages(self.session_id)
+            return [
+                ContextMessage.from_json(message)
+                for message in context.get(agent_name, [])
+            ]
+
         if not self.reasoning_context:
-            context = self.db.get_context_messages(self.session_id)
+            context = self.edited_context or self.db.get_context_messages(self.session_id)
             self.reasoning_context = [
                 ContextMessage.from_json(message)
                 for message in context.get("reasoning", [])

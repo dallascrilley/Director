@@ -26,17 +26,15 @@ SUBTITLE_AGENT_PARAMETERS = {
         },
         "video_language": {
             "type": "string",
-            "description": (
-                'The language spoken in the video. Use the full English name '
-                '(e.g., "English", "Spanish", "French", "Hindi").'
-            ),
+            "description": 'The language spoken in the video. Use the full English name (e.g., "English", "Spanish", "French", "Hindi", "Kannada"). This is used for transcript generation. Ask the user which language is spoken in the video".',
         },
         "target_language": {
             "type": "string",
-            "description": (
-                "Desired subtitle language. Defaults to the video_language if "
-                "not provided."
-            ),
+            "description": 'The desired language for the subtitles. Use the full English name (e.g., "English", "Spanish", "French", "Hindi", "Kannada"). If different from video_language, the transcript will be translated. Defaults to the video_language.',
+        },
+        "target_language_iso_code": {
+            "type": "string",
+            "description": 'ISO 639-1 language code for the target language (e.g., "en" for English, "es" for Spanish, "fr" for French, "hi" for Hindi, "kn" for Kannada). Required when target_language is different from video_language for proper translation.',
         },
         "notes": {
             "type": "string",
@@ -44,84 +42,62 @@ SUBTITLE_AGENT_PARAMETERS = {
         },
         "template": {
             "type": "string",
-            "description": (
-                'Template name. Options: "tiktok_classic" (default), '
-                '"cinematic_gold", "bold_impact", "box_highlight", '
-                '"color_wave", "supersize_drama", "clean_minimal", '
-                '"modern_boxed".'
-            ),
+            "description": 'Predefined template name. Options: "tiktok_classic" (default - white bold text with black outline, impact animation), "cinematic_gold" (elegant golden italic with reveal), "bold_impact" (large white center text with impact), "box_highlight" (words with animated box), "color_wave" (karaoke-style color sweep), "supersize_drama" (dramatic scale-up animation), "clean_minimal" (elegant serif, no animation), "modern_boxed" (white text in black boxes with reveal).',
         },
         "font_name": {
             "type": "string",
-            "description": (
-                'Font family name (e.g., "Arial", "Georgia"). Defaults to "Arial".'
-            ),
+            "description": 'Font family name. Common options: "Arial", "Georgia", "Verdana", "Tahoma", "Trebuchet MS", "Times New Roman", "Courier New", "Comic Sans MS". Defaults to "Arial".',
         },
         "font_size": {
             "type": "integer",
-            "description": "Font size in pixels. Recommended range: 40-70.",
+            "description": "Font size in pixels. Recommended range: 40-70. Defaults to 58.",
         },
         "font_bold": {
             "type": "boolean",
-            "description": "Whether text should be bold.",
+            "description": "Whether text should be bold. Defaults to true.",
         },
         "font_italic": {
             "type": "boolean",
-            "description": "Whether text should be italic.",
+            "description": "Whether text should be italic. Defaults to false.",
         },
         "animation": {
             "type": "string",
-            "description": (
-                'Animation style. Options: "impact" (default), "reveal", '
-                '"supersize", "box_highlight", "color_highlight", "none".'
-            ),
+            "description": 'Animation style. Options: "impact" (default - punchy scale effect), "reveal" (gradual appearance), "supersize" (dramatic scale-up), "box_highlight" (animated box around words), "color_highlight" (karaoke-style color sweep), "none" (static, no animation).',
         },
         "position_alignment": {
             "type": "string",
-            "description": (
-                'Caption position. Options: "bottom_center" (default), '
-                '"bottom_left", "bottom_right", "middle_center", "middle_left", '
-                '"middle_right", "top_center", "top_left", "top_right".'
-            ),
+            "description": 'Caption position. Options: "bottom_center" (default), "bottom_left", "bottom_right", "middle_center", "middle_left", "middle_right", "top_center", "top_left", "top_right".',
         },
         "primary_color": {
             "type": "string",
-            "description": (
-                'Main text color in ASS format (&HAABBGGRR). '
-                'Example: "&H00FFFFFF" (white).'
-            ),
+            "description": 'Main text color in ASS format (&HAABBGGRR). Examples: "&H00FFFFFF" (white - default), "&H00000000" (black), "&H000000FF" (red), "&H0000FF00" (green), "&H00FF0000" (blue), "&H0000FFFF" (yellow), "&H00FF00FF" (magenta).',
         },
         "secondary_color": {
             "type": "string",
-            "description": (
-                'Highlight color in ASS format. Defaults to "&H0000FFFF".'
-            ),
+            "description": 'Highlight/accent color for animations in ASS format. Defaults to "&H0000FFFF" (yellow). Used for color_highlight animation and box_highlight.',
         },
         "back_color": {
             "type": "string",
-            "description": (
-                "Background/shadow color in ASS format. "
-                'Example: "&H80000000".'
-            ),
+            "description": 'Background/shadow color in ASS format. Examples: "&H00000000" (transparent - default), "&H80000000" (semi-transparent black), "&HA0000000" (more opaque black), "&HE0000000" (nearly opaque black box).',
         },
         "outline_color": {
             "type": "string",
-            "description": 'Text outline color in ASS format. Defaults to "&H00000000".',
+            "description": 'Text outline color in ASS format. Defaults to "&H00000000" (black outline).',
         },
         "outline_width": {
             "type": "integer",
-            "description": "Outline thickness in pixels. Range: 0-5.",
+            "description": "Outline thickness in pixels. Range: 0-5. Defaults to 3. Use 0 for no outline.",
         },
         "margin_vertical": {
             "type": "integer",
-            "description": "Vertical margin from edge in pixels.",
+            "description": "Vertical margin from edge in pixels. Defaults to 40 for bottom positions, 20 for others.",
         },
         "margin_horizontal": {
             "type": "integer",
-            "description": "Horizontal margin from edge in pixels.",
+            "description": "Horizontal margin from edge in pixels. Defaults to 15.",
         },
     },
-    "required": ["video_id", "collection_id", "video_language"],
+    "required": ["video_id", "collection_id", "video_language", "target_language"],
 }
 
 TEMPLATES = {
@@ -231,6 +207,18 @@ TEMPLATES = {
     },
 }
 
+ALIGNMENT_MAP = {
+    "bottom_left": "bottom_left",
+    "bottom_center": "bottom_center",
+    "bottom_right": "bottom_right",
+    "middle_left": "middle_left",
+    "middle_center": "middle_center",
+    "middle_right": "middle_right",
+    "top_left": "top_left",
+    "top_center": "top_center",
+    "top_right": "top_right",
+}
+
 INDIAN_LANGUAGE_FONTS = {
     "hindi": "Noto Sans Devanagari",
     "marathi": "Noto Sans Devanagari",
@@ -241,18 +229,31 @@ INDIAN_LANGUAGE_FONTS = {
 }
 
 
+GEMINI_SUPPORTED_LANGUAGES = {
+    "hindi": "hi" ,
+    "tamil": "ta" ,
+    "bengali": "bn" ,
+    "gujarati": "gu" ,
+    "telugu": "te" ,
+    "kannada": "kn" ,
+    "punjabi": "pa" ,
+    "odia": "or" ,
+    "malayalam": "ml" ,
+    "assamese": "as" ,
+    "marathi": "mr" ,
+    "manipuri": "mni" ,
+    "rajasthani": "raj" ,
+}
+
 class SubtitleAgent(BaseAgent):
     def __init__(self, session: Session, **kwargs):
         self.agent_name = "subtitle"
-        self.description = (
-            "Advanced subtitle agent with templates, animations, and styling "
-            "options. Uses the VideoDB Editor API for word-level timing and "
-            "effects."
-        )
+        self.description = "Advanced subtitle agent with professional templates, animations, and extensive styling options. Supports 8 predefined templates (TikTok Classic, Cinematic Gold, Bold Impact, Box Highlight, Color Wave, Supersize Drama, Clean Minimal, Modern Boxed) plus full customization of fonts, colors, animations, and positioning. Uses the new VideoDB Editor API for word-level timing and advanced effects."
         self.parameters = SUBTITLE_AGENT_PARAMETERS
         super().__init__(session=session, **kwargs)
 
     def _get_alignment_enum(self, position_alignment: str):
+        """Convert position string to CaptionAlignment enum."""
         from videodb.editor import CaptionAlignment
 
         alignment_map = {
@@ -269,6 +270,7 @@ class SubtitleAgent(BaseAgent):
         return alignment_map.get(position_alignment, CaptionAlignment.bottom_center)
 
     def _get_animation_enum(self, animation: str):
+        """Convert animation string to CaptionAnimation enum."""
         from videodb.editor import CaptionAnimation
 
         if not animation or animation == "none":
@@ -284,6 +286,7 @@ class SubtitleAgent(BaseAgent):
         return animation_map.get(animation)
 
     def _build_config(self, **kwargs):
+        """Build configuration from template and overrides."""
         template_name = kwargs.get("template", "tiktok_classic")
         target_language = kwargs.get("target_language", "english").lower()
 
@@ -293,17 +296,9 @@ class SubtitleAgent(BaseAgent):
             config = TEMPLATES["tiktok_classic"].copy()
 
         override_keys = [
-            "font_name",
-            "font_size",
-            "font_bold",
-            "font_italic",
-            "animation",
-            "position_alignment",
-            "primary_color",
-            "secondary_color",
-            "back_color",
-            "outline_color",
-            "outline_width",
+            "font_name", "font_size", "font_bold", "font_italic",
+            "animation", "position_alignment", "primary_color",
+            "secondary_color", "back_color", "outline_color", "outline_width"
         ]
 
         for key in override_keys:
@@ -312,9 +307,6 @@ class SubtitleAgent(BaseAgent):
 
         if kwargs.get("font_name") is None and target_language in INDIAN_LANGUAGE_FONTS:
             config["font_name"] = INDIAN_LANGUAGE_FONTS[target_language]
-            logger.info(
-                f"Auto-selected font '{config['font_name']}' for language: {target_language}"
-            )
 
         position = config["position_alignment"]
         if kwargs.get("margin_vertical") is not None:
@@ -325,13 +317,12 @@ class SubtitleAgent(BaseAgent):
         if kwargs.get("margin_horizontal") is not None:
             config["margin_horizontal"] = kwargs["margin_horizontal"]
         else:
-            config["margin_horizontal"] = (
-                20 if "left" in position or "right" in position else 15
-            )
-
+            config["margin_horizontal"] = 20 if "left" in position or "right" in position else 15
+        
         return config
 
-    def _create_caption_clip(self, config: dict, duration: float):
+    def _create_caption_clip(self, config: dict, duration: float, transcript_src: str = "auto"):
+        """Create a CaptionAsset clip based on configuration."""
         from videodb.editor import (
             CaptionAsset,
             FontStyling,
@@ -348,9 +339,7 @@ class SubtitleAgent(BaseAgent):
             size=config.get("font_size", 58),
         )
 
-        caption_alignment = self._get_alignment_enum(
-            config.get("position_alignment", "bottom_center")
-        )
+        caption_alignment = self._get_alignment_enum(config.get("position_alignment", "bottom_center"))
         position = Positioning(
             alignment=caption_alignment,
             margin_l=config.get("margin_horizontal", 15),
@@ -364,6 +353,7 @@ class SubtitleAgent(BaseAgent):
         )
 
         caption_asset = CaptionAsset(
+            src=transcript_src,
             animation=animation,
             position=position,
             font=font,
@@ -373,14 +363,20 @@ class SubtitleAgent(BaseAgent):
             border=border,
         )
 
-        return Clip(asset=caption_asset, duration=duration)
+        caption_clip = Clip(
+            asset=caption_asset,
+            duration=duration,
+        )
+
+        return caption_clip
 
     def run(
         self,
         video_id: str,
         collection_id: str,
         video_language: str,
-        target_language: str = None,
+        target_language: str,
+        target_language_iso_code: str = None,
         notes: str = "",
         template: str = "tiktok_classic",
         font_name: str = None,
@@ -399,9 +395,35 @@ class SubtitleAgent(BaseAgent):
         *args,
         **kwargs,
     ) -> AgentResponse:
+        """
+        Adds professional animated subtitles to the specified video using the new Editor API.
+
+        :param str video_id: The unique identifier of the video to process.
+        :param str collection_id: The unique identifier of the collection containing the video.
+        :param str video_language: Language spoken in the video (default: "english").
+        :param str target_language: Desired subtitle language. If different from video_language, transcript will be translated (default: same as video_language).
+        :param str target_language_iso_code: ISO 639-1 code for target language (e.g., "en", "es", "fr"). Required for translation.
+        :param str notes: Additional style requirements for translation (only used when translating).
+        :param str template: Predefined template name (default: "tiktok_classic").
+        :param str font_name: Font family (overrides template).
+        :param int font_size: Font size in pixels (overrides template).
+        :param bool font_bold: Bold text (overrides template).
+        :param bool font_italic: Italic text (overrides template).
+        :param str animation: Animation style (overrides template).
+        :param str position_alignment: Caption position (overrides template).
+        :param str primary_color: Main text color in ASS format (overrides template).
+        :param str secondary_color: Highlight color (overrides template).
+        :param str back_color: Background color (overrides template).
+        :param str outline_color: Outline color (overrides template).
+        :param int outline_width: Outline thickness (overrides template).
+        :param int margin_vertical: Vertical margin in pixels (overrides template).
+        :param int margin_horizontal: Horizontal margin in pixels (overrides template).
+        :return: The response indicating success or failure.
+        :rtype: AgentResponse
+        """
         try:
             from videodb.editor import Timeline, Track, Clip, VideoAsset
-
+            self.video_id = video_id
             self.videodb_tool = VideoDBTool(collection_id=collection_id)
 
             video_lang = video_language.lower()
@@ -424,46 +446,42 @@ class SubtitleAgent(BaseAgent):
             video_duration = video_info.get("length", 30)
 
             try:
-                self.videodb_tool.get_transcript(video_id, text=False)
+                final_transcript = self.videodb_tool.get_transcript(video_id, text=False)
             except InvalidRequestError:
                 logger.info(
-                    "Transcript not available for video %s. Indexing spoken words.",
-                    video_id,
+                    f"Transcript not available for video {video_id}. Indexing spoken words in {video_language}.."
                 )
-                self.output_message.actions.append(
-                    f"Indexing spoken words in {video_language}..."
-                )
+                self.output_message.actions.append(f"Indexing spoken words in {video_language}...")
                 self.output_message.push_update()
-                self.videodb_tool.index_spoken_words(video_id)
+
+                language_code = GEMINI_SUPPORTED_LANGUAGES.get(video_lang, None)
+                self.videodb_tool.index_spoken_words(video_id, language_code=language_code)
+                final_transcript = self.videodb_tool.get_transcript(video_id, text=False)
 
             self.output_message.content.append(subtitles_content)
             if needs_translation:
                 self.output_message.actions.append(
-                    f"Translating subtitles from {video_language} to {target_language}..."
+                    f"Translating subtitles from {video_language} to {target_language}.."
                 )
                 self.output_message.push_update()
 
                 try:
-                    self.videodb_tool.translate_transcript(
+                    final_transcript = self.videodb_tool.translate_transcript(
                         video_id=video_id,
-                        language=target_lang,
+                        language=target_language_iso_code,
                         additional_notes=notes,
                     )
                 except Exception as e:
                     logger.error(f"Translation failed: {e}")
                     subtitles_content.status = MsgStatus.error
-                    subtitles_content.status_message = (
-                        "Translation failed. Please try again."
-                    )
+                    subtitles_content.status_message = "Translation failed. Please try again."
                     self.output_message.publish()
                     return AgentResponse(
                         status=AgentStatus.ERROR,
                         message=f"Translation failed: {str(e)}",
                     )
             else:
-                self.output_message.actions.append(
-                    f"Using transcript in {video_language} and preparing subtitles..."
-                )
+                self.output_message.actions.append(f"Using original transcript in {video_language} and preparing the subtitles in {target_language}...")
                 self.output_message.push_update()
 
             self.output_message.actions.append("Building subtitle configuration")
@@ -500,7 +518,7 @@ class SubtitleAgent(BaseAgent):
                 asset=VideoAsset(id=video_id, start=0),
                 duration=video_duration,
             )
-            caption_clip = self._create_caption_clip(config, video_duration)
+            caption_clip = self._create_caption_clip(config, video_duration, final_transcript)
 
             track = Track()
             track.add_clip(0, video_clip)
@@ -514,14 +532,20 @@ class SubtitleAgent(BaseAgent):
 
             stream_url = timeline.generate_stream()
 
-            subtitles_content.video = VideoData(stream_url=stream_url)
+            video_data = VideoData(
+                stream_url=stream_url,
+            )
+            subtitles_content.video = video_data
             subtitles_content.status = MsgStatus.success
-
+            
+            animation_text = config.get("animation", "none")
+            if animation_text == "none":
+                animation_text = "static (no animation)"
+            
             subtitle_lang_msg = target_language or video_language
             if needs_translation:
-                subtitle_lang_msg = (
-                    f"{target_language} (translated from {video_language})"
-                )
+                subtitle_lang_msg = f"{target_language} (translated from {video_language})"
+            
             subtitles_content.status_message = (
                 f"Professional subtitles in {subtitle_lang_msg} added successfully! "
                 f"Using template: {template}"
@@ -549,3 +573,4 @@ class SubtitleAgent(BaseAgent):
                 "translated": needs_translation,
             },
         )
+
