@@ -69,13 +69,17 @@ class PostgresDB(BaseDB):
         row = self.cursor.fetchone()
         if row is not None:
             session = dict(row)
+            session["video_id"] = session["video_id"] or ""
             return session
         return {}
 
     def get_sessions(self) -> list:
         self.cursor.execute("SELECT * FROM sessions ORDER BY updated_at DESC")
         rows = self.cursor.fetchall()
-        return [dict(r) for r in rows]
+        sessions = [dict(r) for r in rows]
+        for s in sessions:
+            s["video_id"] = s["video_id"] or ""
+        return sessions
 
     def add_or_update_msg_to_conv(
         self,

@@ -80,6 +80,7 @@ class SQLiteDB(BaseDB):
         if row is not None:
             session = dict(row)  # Convert sqlite3.Row to dictionary
             session["metadata"] = json.loads(session["metadata"])
+            session["video_id"] = session["video_id"] or ""
             return session
 
         else:
@@ -96,6 +97,7 @@ class SQLiteDB(BaseDB):
         sessions = [dict(r) for r in row]
         for s in sessions:
             s["metadata"] = json.loads(s["metadata"])
+            s["video_id"] = s["video_id"] or ""
         return sessions
 
     def add_or_update_msg_to_conv(

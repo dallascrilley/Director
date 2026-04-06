@@ -24,7 +24,7 @@ class VideoDBTool:
         return {
             "id": self.collection.id,
             "name": self.collection.name,
-            "description": self.collection.description,
+            "description": self.collection.description or "",
         }
 
     def get_collections(self):
@@ -34,7 +34,7 @@ class VideoDBTool:
             {
                 "id": collection.id,
                 "name": collection.name,
-                "description": collection.description,
+                "description": collection.description or "",
             }
             for collection in collections
         ]
@@ -49,7 +49,7 @@ class VideoDBTool:
                 "id": image.id,
                 "url": image.url,
                 "name": image.name,
-                "description": getattr(image, "description", None),
+                "description": getattr(image, "description", None) or "",
                 "collection_id": image.collection_id,
             }
         except Exception as e:
@@ -110,11 +110,11 @@ class VideoDBTool:
         return {
             "id": video.id,
             "name": video.name,
-            "description": video.description,
+            "description": video.description or "",
             "collection_id": video.collection_id,
             "stream_url": video.stream_url,
             "length": video.length,
-            "thumbnail_url": video.thumbnail_url,
+            "thumbnail_url": video.thumbnail_url or "",
         }
 
     def delete_video(self, video_id):
@@ -151,11 +151,11 @@ class VideoDBTool:
             {
                 "id": video.id,
                 "name": video.name,
-                "description": video.description,
+                "description": video.description or "",
                 "collection_id": video.collection_id,
                 "stream_url": video.stream_url,
                 "length": video.length,
-                "thumbnail_url": video.thumbnail_url,
+                "thumbnail_url": video.thumbnail_url or "",
                 "type": "video",
             }
             for video in videos
