@@ -1,4 +1,5 @@
 import json
+import logging
 from enum import Enum
 
 from pydantic import Field, field_validator, FieldValidationInfo
@@ -10,6 +11,8 @@ from director.constants import (
     LLMType,
     EnvPrefix,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class OpenRouterChatModel(str, Enum):
@@ -179,24 +182,38 @@ class OpenRouter(BaseLLM):
         try:
             response = self.client.chat.completions.create(**params)
         except Exception as e:
-            print(f"Error: {e}")
+            logger.exception("OpenRouter chat.completions failed: %s", e)
             return LLMResponse(content=f"Error: {e}")
+
+        tool_calls = []
+        raw_tool_calls = response.choices[0].message.tool_calls
+        if raw_tool_calls:
+            for tool_call in raw_tool_calls:
+                try:
+                    arguments = json.loads(tool_call.function.arguments)
+                except json.JSONDecodeError as e:
+                    logger.warning(
+                        "OpenRouter tool_call arguments JSON decode failed: %s",
+                        e,
+                    )
+                    return LLMResponse(
+                        content=f"Error: invalid tool arguments JSON: {e}",
+                        status=LLMResponseStatus.ERROR,
+                    )
+                tool_calls.append(
+                    {
+                        "id": tool_call.id,
+                        "tool": {
+                            "name": tool_call.function.name,
+                            "arguments": arguments,
+                        },
+                        "type": tool_call.type,
+                    }
+                )
 
         return LLMResponse(
             content=response.choices[0].message.content or "",
-            tool_calls=[
-                {
-                    "id": tool_call.id,
-                    "tool": {
-                        "name": tool_call.function.name,
-                        "arguments": json.loads(tool_call.function.arguments),
-                    },
-                    "type": tool_call.type,
-                }
-                for tool_call in response.choices[0].message.tool_calls
-            ]
-            if response.choices[0].message.tool_calls
-            else [],
+            tool_calls=tool_calls,
             finish_reason=response.choices[0].finish_reason,
             send_tokens=response.usage.prompt_tokens,
             recv_tokens=response.usage.completion_tokens,

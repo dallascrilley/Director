@@ -6,17 +6,7 @@ export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd());
 
   return defineConfig({
-    plugins: [
-      vue({
-        template: {
-          compilerOptions: {
-            // Suppress Vue warnings for events that external packages don't explicitly declare
-            // Fixes: "Extraneous non-emits event listeners (videoClick)" from @videodb/chat-vue
-            isCustomElement: (tag) => tag.includes('-'),
-          },
-        },
-      }),
-    ],
+    plugins: [vue()],
     server: {
       host: '0.0.0.0',
       port: parseInt(env.VITE_PORT),  // Access the port directly from the env object
