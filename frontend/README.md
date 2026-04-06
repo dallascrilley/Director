@@ -8,8 +8,8 @@ Director Frontend is a Vue.js-based user interface for the Director project. It 
 - Vue.js 3
 - Vue Router
 - Socket.io Client
-- @videodb/chat-vue ([Github](https://github.com/video-db/videodb-chat))
-- @videodb/player-vue ([Github](https://github.com/video-db/videodb-player))
+- @videodb/chat-vue ([npm](https://www.npmjs.com/package/@videodb/chat-vue))
+- @videodb/player-vue ([npm](https://www.npmjs.com/package/@videodb/player-vue))
 - Tailwind CSS
 - Vite
 

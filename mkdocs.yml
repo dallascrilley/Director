@@ -1,8 +1,8 @@
 site_name: ""
 
 
-repo_url: https://github.com/video-db/Director
-repo_name: videodb-db/Director
+repo_url: https://github.com/dallascrilley/Director
+repo_name: dallascrilley/Director
 edit_uri: edit/main/docs/
 extra:
   generator: True
@@ -178,11 +178,7 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/video-db
-    - icon: fontawesome/brands/x-twitter
-      link: https://x.com/videodb_io
-    - icon: fontawesome/brands/discord
-      link: https://discord.com/invite/py9P639jGz
+      link: https://github.com/dallascrilley
 
 extra_css:
   - stylesheets/extra.css

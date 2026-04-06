@@ -18,7 +18,7 @@
 
 1. Clone the Director repository to your local machine:
     ```
-    git clone https://github.com/video-db/Director
+    git clone https://github.com/dallascrilley/Director
     ```
 2. Change the directory to the cloned repository:
     ```

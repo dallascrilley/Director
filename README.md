@@ -14,7 +14,7 @@
 
 <p align="center">
 <p align="center">
-        <a href="https://render.com/deploy?repo=https://github.com/video-db/Director" target="_blank" rel="nofollow">
+        <a href="https://render.com/deploy?repo=https://github.com/dallascrilley/Director" target="_blank" rel="nofollow">
                 <img src="https://render.com/images/deploy-to-render-button.svg" alt="Deploy to Render">
         </a>
         <a href="https://railway.app/template/QJbo7o" target="_blank" rel="nofollow">
@@ -37,7 +37,7 @@
     <br /><br />
     <a href="https://docs.director.videodb.io/index.html" target="_blank" rel="noopener noreferrer">📖 Documentation</a>
     &nbsp;&nbsp;&nbsp;
-    <a href="https://github.com/video-db/Director/issues/new?assignees=&labels=enhancement&projects=&template=agent_request.yml" target="_blank" rel="noopener noreferrer">👩‍💻New Agent Request</a>
+    <a href="https://github.com/dallascrilley/Director/issues/new?assignees=&labels=enhancement&projects=&template=agent_request.yml" target="_blank" rel="noopener noreferrer">👩‍💻New Agent Request</a>
   </p>
    </p>
 </p>
@@ -104,9 +104,9 @@ Easily add new agents and tools to your workflow. Whether you want to run it loc
 ## ⚙️ Architecture Overview
 Director's architecture brings together:
 
-- **Backend Reasoning Engine:** Handles workflows and decision-making. Checkout the [backend folder](https://github.com/video-db/Director/tree/main/backend) in director codebase. 
-- **Chat-Based UI:** Engage with your media library conversationally. Check [videodb-chat](https://github.com/video-db/videodb-chat) for the source code.
-- **Video Player:** Advanced playback and interaction tools. Check [videodb-player](https://github.com/video-db/videodb-player) for the details about the multi platform video player. 
+- **Backend Reasoning Engine:** Handles workflows and decision-making. Checkout the [backend folder](https://github.com/dallascrilley/Director/tree/main/backend) in director codebase. 
+- **Chat-Based UI:** Engage with your media library conversationally. See [`@videodb/chat-vue` on npm](https://www.npmjs.com/package/@videodb/chat-vue).
+- **Video Player:** Advanced playback and interaction tools. See [`@videodb/player-vue` on npm](https://www.npmjs.com/package/@videodb/player-vue). 
 - **Collection View:** Organize and browse your media effortlessly.
 
   ![Director architecture](https://github.com/user-attachments/assets/9afb2783-66db-4899-9308-03cbd12e74d7)
@@ -148,7 +148,7 @@ For a closer look, check out the detailed architecture diagram below:
 **1. Clone the repository:**
 
 ``` bash
-git clone https://github.com/video-db/Director.git
+git clone https://github.com/dallascrilley/Director.git
 cd Director
 ```
 
@@ -271,10 +271,10 @@ Any contributions you make are **greatly appreciated**. Here's the process:
 
 [discord-shield]: https://img.shields.io/badge/dynamic/json?style=for-the-badge&url=https://discord.com/api/invites/py9P639jGz?with_counts=true&query=$.approximate_member_count&logo=discord&logoColor=blue&color=green&label=discord
 [discord-url]: https://discord.com/invite/py9P639jGz
-[stars-shield]: https://img.shields.io/github/stars/video-db/Director.svg?style=for-the-badge
-[stars-url]: https://github.com/video-db/Director/stargazers
-[issues-shield]: https://img.shields.io/github/issues/video-db/Director.svg?style=for-the-badge
-[issues-url]: https://github.com/video-db/Director/issues
+[stars-shield]: https://img.shields.io/github/stars/dallascrilley/Director.svg?style=for-the-badge
+[stars-url]: https://github.com/dallascrilley/Director/stargazers
+[issues-shield]: https://img.shields.io/github/issues/dallascrilley/Director.svg?style=for-the-badge
+[issues-url]: https://github.com/dallascrilley/Director/issues
 [website-shield]: https://img.shields.io/website?url=https%3A%2F%2Fvideodb.io%2F&style=for-the-badge&label=videodb.io
 [website-url]: https://videodb.io/
 

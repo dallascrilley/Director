@@ -65,4 +65,4 @@ When adding new documentation:
 
 ## 🤝 Need Help?
 
-If you encounter any issues or have questions about the documentation, please [open an issue](https://github.com/video-db/Director/issues) on our GitHub repository.
+If you encounter any issues or have questions about the documentation, please [open an issue](https://github.com/dallascrilley/Director/issues) on the GitHub repository.

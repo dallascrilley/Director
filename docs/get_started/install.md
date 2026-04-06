@@ -11,7 +11,7 @@
 1. Clone the repository:
 
 ``` bash
-git clone https://github.com/video-db/Director.git
+git clone https://github.com/dallascrilley/Director.git
 cd Director
 ```
 
