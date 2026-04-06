@@ -136,7 +136,7 @@ class VideoDBTool:
         except ValueError as ve:
             logging.error(f"ValueError while deleting video: {ve}")
             raise ve
-        except Exception as e:
+        except Exception:
             logging.exception(
                 f"Unexpected error occurred while deleting video {video_id}"
             )
@@ -443,7 +443,7 @@ class VideoDBTool:
         except ValueError as ve:
             logging.error(f"ValueError while deleting video: {ve}")
             raise ve
-        except Exception as e:
+        except Exception:
             logging.exception(
                 f"Unexpected error occurred while deleting video {audio_id}"
             )
@@ -470,7 +470,7 @@ class VideoDBTool:
         except ValueError as ve:
             logging.error(f"ValueError while deleting video: {ve}")
             raise ve
-        except Exception as e:
+        except Exception:
             logging.exception(
                 f"Unexpected error occurred while deleting video {image_id}"
             )
